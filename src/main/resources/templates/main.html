@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>新浪微博</title>
+
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+
+
+    <link rel="stylesheet" href="../static/css/comment.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style_container.css">
+
+
+
+</head>
+<body>
+
+
+<!--注册框开始-->
+<div class="modal" id="login_model">
+    <div class="modal-dialog">
+        <!--            登录框内容-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--标题-->
+                <h4 class="modal-title">请输入用户名和密码</h4>
+
+                <!--取消按钮-->
+                <button class="modal-login_cancer" data-dismiss="modal">
+                    <!--iconfont待修改-->
+                    <em class="iconfont">&#xe621;</em>
+                </button>
+
+            </div>
+
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form action="#" id="form" class="form-horizontal"  th:object="${User}">
+
+
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label for="userName"></label><input id="userName" name="userName" placeholder="手机号" class="form-control" type="text" th:field='*{email}' pattern="([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})" oninput=check(this) required >
+                            <label for="passWord"></label><input id="passWord" name="passWord" placeholder="请输入密码" class="form-control" type="password" th:field="*{passWord}" pattern="[a-zA-Z]\w{5,17}" oninput=check(this) required >
+                            <label for="passWordAgain"></label><input id="passWordAgain" name="passWordAgain" placeholder="请再次输入密码" class="form-control" type="password" th:field="*{passWordAgain}" pattern="[a-zA-Z]\w{5,17}" oninput=check(this) required >
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" id="loginCertain_btn" class="btn login_btn">确认</button>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<!--注册框结束-->
+
+
+
+<nav class="navbar  navbar-fixed-top" role="navigation" style="background: #e0620d ;padding-top: 3px;height:50px;">
+    <div class="container-fluid" style="background: #fff;">
+        <div class="navbar-header ">
+            <span class="navbar-brand " href="#">WEIBO</span>
+
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#my-navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="#热门话题#">
+                <i class="glyphicon glyphicon-search btn_search" ></i>
+                <!--  <button type="submit" class="btn btn-default">提交</button> -->
+            </div>
+
+        </form>
+
+        <div class="collapse navbar-collapse" id="my-navbar-collapse">
+
+            <ul class="nav navbar-nav navbar-right" >
+                <li >
+                    <a href="#" >
+                        <i class="glyphicon glyphicon-user" ></i>
+                        <i id="nickName">&nbsp;&nbsp;游客</i>
+                    </a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        设置 <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###" class="logIn" id="loginBtn">登录</a></li>
+                        <li><a  href="###" class="logUp" id="logupBtn">注册</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+
+
+    </div>
+    <hr style="margin: 0;padding: 0;color:#222;width: 100%">
+</nav>
+
+<div class="container container_bg" >
+    <div class="row">
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-6 col-xs-12 my_edit" >
+            <div class="row" id="edit_form">
+                <span class="pull-left" style="margin:15px;">编写新鲜事</span>
+                <span class="tips pull-right" style="margin:15px;"></span>
+                <form role="form" style="margin-top: 50px;" id="messageForm" method="post" action="###" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+
+                            <div contentEditable="true" id="content" class="form-control " ></div>
+                        </div>
+                        <div class="col-sm-12" style="margin-top: 12px;">
+                            <span class="emoji" >表情</span>
+
+                            <span class="pic" >图片	</span>
+                            <span>
+									<input type="file" name="img"  class="select_Img" style="display: none" >
+									<img class="preview" src="">
+								</span>
+
+
+                            <div class="myEmoji" >
+                                <ul id="myTab" class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#set" data-toggle="tab">
+                                            预设
+                                        </a>
+                                    </li>
+                                    <li><a href="#hot" data-toggle="tab">热门</a></li>
+
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                    <div class="tab-pane fade in active" id="set">
+                                        <div class="emoji_1"></div>
+
+                                    </div>
+                                    <div class="tab-pane fade" id="hot">
+                                        <div class="emoji_2"></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- <span> <input type="file" id="selectImg" value=""></input> </span> -->
+                            <button type="submit" id="send" class="btn btn-default pull-right disabled">发布</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="container">
+                <ul id="nav">
+                    <li><a class="cur" href="###" choose="commentNum" onclick="order(this)">评论<span>Comment</span></a></li>
+                    <li><a href="###" choose="aggreeNum" onclick="order(this)">点赞<span>Agree</span></a></li>
+                    <li><a href="###" choose="createDate" onclick="order(this)">发布时间<span>creatDate</span></a></li>
+
+                </ul>
+                <div id="buoy"></div>
+            </div>
+
+
+            <div class="msg" th:fragment="msg">
+                <div class="row item_msg" th:each="i,iStat:${messages.getContent()}" th:id="${i.id}">
+                    <div class="col-sm-12 col-xs-12 message" >
+                        <img src="../static/img/icon.png" class="col-sm-2 col-xs-2" style="border-radius: 50%">
+                        <div class="col-sm-10 col-xs-10">
+                            <span style="font-weight: bold;" th:text= ${i.fromNickName}>Jack.C</span>
+                            <br>
+                            <small class="date" style="color:#999" th:text=${i.createDate}>1分钟前</small>
+                            <div class="msg_content" th:text=${i.content}>happy day!</div>
+                            <img  class="mypic" th:if = "${i.messageUrl}!=null" th:src="@{'../static/img/'+${i.messageUrl}}"  >
+
+                        </div>
+                    </div>
+                    <div class="comment-text-area">
+                        <div class="text-area-star">
+                            <label><input type="radio" onclick="chComment(this)" name="star" value="1"/><span th:text="评论（+${i.commentNum}+）">一星</span></label>
+                            <label><input type="radio" onclick="chAgree(this)" name="star" value="2"/><span th:text="点赞（+${i.aggreeNum}+）">二星</span></label>
+                        </div>
+                        <div lang="en-US" style="display: none" class="gitment-container gitment-comments-container">
+                            <div class="col-sm-12">
+                                <div contentEditable="true" id="commentText" class="form-control " ></div>
+                                <button  class="submitComment" text="确认提交" onclick="submitComment(this)">确认提交</button>
+                            </div>
+                            <div class="col-sm-13">
+                                <ul class="gitment-comments-list" th:fragment="commentList" >
+
+                                    <li class="gitment-comment" th:each="i:${commentList}">
+                                        <a class="gitment-comment-avatar">
+                                            <img class="gitment-comment-avatar-img" src="../images/default-avatar.png">
+                                        </a>
+                                        <div class="gitment-comment-main">
+                                            <div class="gitment-comment-header">
+                                                <a class="gitment-comment-name" th:text="${i.fromNickName}">
+                                                    张三
+                                                </a>
+                                                <span th:text="${i.createDate}">2018.05.17</span>
+
+                                                <div class="gitment-comment-like-btn" th:text="${i.agreeNum}">
+                                                    <svg class="gitment-heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                                        <path d="M25 39.7l-.6-.5C11.5 28.7 8 25 8 19c0-5 4-9 9-9 4.1 0 6.4 2.3 8 4.1 1.6-1.8 3.9-4.1 8-4.1 5 0 9 4 9 9 0 6-3.5 9.7-16.4 20.2l-.6.5zM17 12c-3.9 0-7 3.1-7 7 0 5.1 3.2 8.5 15 18.1 11.8-9.6 15-13 15-18.1 0-3.9-3.1-7-7-7-3.5 0-5.4 2.1-6.9 3.8L25 17.1l-1.1-1.3C22.4 14.1 20.5 12 17 12z"></path>
+                                                    </svg>
+
+                                                </div>
+                                            </div>
+                                            <div class="gitment-comment-body gitment-markdown"><p th:text="${i.content}">评论的内容评论的内容评论的内容评论的内容评论的内容
+                                                评论的内容评论的内容评论的内容评论的内容评论的内容评论的内容
+                                                评论的内容评论的内容评论的内容评论的内容评论的内容评论的内容评论的内容
+                                                评论的内容评论的内容评论的内容评论的内容</p></div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+
+        <div class="col-sm-3 col-xs-12 part_right" >
+            <div class="row text-center inform">
+                <img src="img/icon.png" >
+                <h4 style="font-weight: bold;">Jack.C</h4>
+                <div class="col-sm-12 my_inform" >
+                    <div class="col-sm-4 col-xs-4">
+                        <div>111</div>
+                        <div class="sort">关注</div>
+
+                    </div>
+                    <div class="col-sm-4 col-xs-4">
+                        <div>111</div>
+                        <div class="sort">粉丝</div>
+                    </div>
+                    <div class="col-sm-4 col-xs-4">
+                        <div>111</div>
+                        <div class="sort">博客</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row part_hot" >
+                <div class="col-sm-12">
+                    <span class="pull-left" style="padding: 10px;font-size:16px;font-weight: bold;">热门话题</span>
+                    <span class="pull-right" style="padding: 10px;">换话题</span>
+                </div>
+                <hr style="margin: 0;padding: 0;width: 100%">
+
+                <div class="col-sm-12 item_hot" >
+                    <span class="pull-left">#英雄联盟s7#</span>
+                    <span class="pull-right item_num">34.6亿</span>
+                </div>
+
+                <div class="col-sm-12 item_hot" >
+                    <span class="pull-left">#今天霜降#</span>
+                    <span class="pull-right item_num">2.6亿</span>
+                </div>
+
+                <div class="col-sm-12 item_hot" >
+                    <span class="pull-left">#亚洲新歌榜#</span>
+                    <span class="pull-right item_num">10.4亿</span>
+                </div>
+
+                <div class="col-sm-12 item_hot" >
+                    <span class="pull-left">#扑通扑通少女心#</span>
+                    <span class="pull-right item_num">1.5亿</span>
+                </div>
+
+                <div class="col-sm-12 item_hot" >
+                    <span class="pull-left">#突然开心#</span>
+                    <span class="pull-right item_num">1.1亿</span>
+                </div>
+                <hr style="margin: 0;padding: 0;width: 100%">
+
+                <div class="col-sm-12 text-center" style="padding: 10px"><a href="#">查看更多</a></div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<script src="../static/js/jquery-3.1.0.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        $("#content").keyup(function(){
+
+            //判断输入的字符串长度
+            var content_len = $("#content").text().replace(/\s/g,"").length;
+
+            $(".tips").text("已经输入"+content_len+"个字");
+
+
+            if(content_len==0){
+                // alert(content);
+                $(".tips").text("");
+                $("#send").addClass("disabled");
+                return false;
+            }else{
+                $("#send").removeClass("disabled");
+            }
+        });
+
+
+        $(".pic").click(function(){
+
+            $(".select_Img").click();
+
+        })
+
+
+
+        //添加表情包1
+        for (var i = 1; i < 60; i++) {
+
+            $(".emoji_1").append("<img src='../static/img/f"+i+".png' style='width:35px;height:35px' >");
+        }
+        //添加表情包2
+        for (var i = 1; i < 61; i++) {
+
+            $(".emoji_2").append("<img src='../static/img/h"+i+".png' style='width:35px;height:35px' >");
+        }
+
+
+        $(".emoji").click(function(){
+
+            $(".myEmoji").show();
+
+            //点击空白处隐藏弹出层
+            $(document).click(function (e) {
+
+                if (!$("#edit_form").is(e.target) && $("#edit_form").has(e.target).length === 0) {
+
+                    $(".myEmoji").hide();
+                }
+            });
+
+
+        });
+
+        //将表情添加到输入框
+        $(".myEmoji img").each(function(){
+            $(this).click(function(){
+                var url = $(this)[0].src;
+
+                $('#content').append("<img src='"+url+"' style='width:25px;height:25px' >");
+
+                $("#send").removeClass("disabled");
+            })
+        })
+
+        // //放大或缩小预览图片
+        // $(".mypic").click(function(){
+        //     var oWidth=$(this).width(); //取得图片的实际宽度
+        //     var oHeight=$(this).height(); //取得图片的实际高度
+        //
+        //     if($(this).height()!=200){
+        //         $(this).height(200);
+        //     }else{
+        //         $(this).height(oHeight + 200/oWidth*oHeight);
+        //
+        //     }
+        //
+        // })
+
+    })
+</script>
+
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+    <div th:text = "共+${messages.getTotalElements()}+条微博，共为+${messages.getTotalPages()}+页，当前为+${messages.getNumber()+1}+页"></div>
+    <a href="/main?start=1">首页</a>
+    <a href="#" th:if="${not messages.isFirst()}" th:href="@{'/main?start='+${messages.getNumber() - 1}}">上一页</a>
+    <a href="#" th:if="${not messages.isLast()}" th:href="@{'/main?start='+${messages.getNumber() + 1}}">下一页</a>
+    <a href="#" th:href="@{'/main?start='+${messages.getTotalPages()-1}}">尾页</a>
+</div>
+
+</body>
+<script type="text/javascript" src="../static/js/comment.js"></script>
+<script type="text/javascript" src="../static/js/login.js"></script>
+
+<script type="text/javascript" src="../static/js/loginAndup.js"></script>
+<script type="text/javascript" src="../static/js/Message.js"></script>
+<script type="text/javascript">
+    $.nicenav(300);
+</script>
+
+</html>
+
